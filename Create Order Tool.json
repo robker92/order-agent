@@ -1,0 +1,716 @@
+{
+  "name": "Create Order Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"Name\": \"string\",\n  \"Address\": \"string\",\n  \"AddressObject\": {\n    \"street\": \"string\",\n    \"houseNumber\": \"string\",\n    \"city\":  \"string\",\n    \"zipCode\": \"string\",\n    \"country\":  \"string\"\n  },\n  \"ZipCode\": \"string\",\n  \"Phone\": \"string\",\n  \"DeliveryOrTakeAway\": \"string\",\n  \"Menu\": \"string\",\n  \"Time\": \"string\",\n  \"Status\": \"string\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -32,
+        -128
+      ],
+      "id": "d3e0a42b-e273-4770-8d7a-b56e4f56886e",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "url": "https://timeapi.io/api/time/current/zone?timeZone=Europe%2FAmsterdam",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        -144
+      ],
+      "id": "76ca4c89-d34f-4de4-9e05-2fdfa709819f",
+      "name": "Send to Printer"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1312,
+        -144
+      ],
+      "id": "106475cf-f650-4184-ab0a-40e461126c8c",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appteBjZma3qMiZUM",
+          "mode": "list",
+          "cachedResultName": "Restaurant Ordering System",
+          "cachedResultUrl": "https://airtable.com/appteBjZma3qMiZUM"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblAGVFSRpiykzDPw",
+          "mode": "list",
+          "cachedResultName": "Customers",
+          "cachedResultUrl": "https://airtable.com/appteBjZma3qMiZUM/tblAGVFSRpiykzDPw"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('When Executed by Another Workflow').item.json.Name }}",
+            "Address": "={{ $('When Executed by Another Workflow').item.json.Address }}",
+            "Phone": "={{ $('When Executed by Another Workflow').item.json.Phone }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        688,
+        112
+      ],
+      "id": "1d5b1d66-66c6-4acf-a0e3-1ea7ac2a61d9",
+      "name": "Persist Customer",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ApOybum6NX9aEHl8",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appteBjZma3qMiZUM",
+          "mode": "list",
+          "cachedResultName": "Restaurant Ordering System",
+          "cachedResultUrl": "https://airtable.com/appteBjZma3qMiZUM"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblNWLXYLnNJHtqgB",
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://airtable.com/appteBjZma3qMiZUM/tblNWLXYLnNJHtqgB"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('When Executed by Another Workflow').item.json.Name }}",
+            "Address": "={{ $('When Executed by Another Workflow').item.json.Address }}",
+            "Phone": "={{ $('When Executed by Another Workflow').item.json.Phone }}",
+            "DeliveryOrTakeAway": "={{ $('When Executed by Another Workflow').item.json.DeliveryOrTakeAway }}",
+            "Menu": "={{ $('When Executed by Another Workflow').item.json.Menu }}",
+            "Time": "={{ $('When Executed by Another Workflow').item.json.Time }}",
+            "Status": "New",
+            "order_id": "={{ $('Create Uuid').item.json.order_id }}",
+            "order_number_for_customer": "={{ $json.order_number_for_customer }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "DeliveryOrTakeAway",
+              "displayName": "DeliveryOrTakeAway",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Menu",
+              "displayName": "Menu",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "New",
+                  "value": "New"
+                },
+                {
+                  "name": "In Progress",
+                  "value": "In Progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                },
+                {
+                  "name": "",
+                  "value": ""
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "order_number_for_customer",
+              "displayName": "order_number_for_customer",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1136,
+        -272
+      ],
+      "id": "2cd8a43f-1a4d-4cfc-932d-af8f7ba23e13",
+      "name": "Persist Order",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ApOybum6NX9aEHl8",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appteBjZma3qMiZUM",
+          "mode": "list",
+          "cachedResultName": "Restaurant Ordering System",
+          "cachedResultUrl": "https://airtable.com/appteBjZma3qMiZUM"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblAGVFSRpiykzDPw",
+          "mode": "list",
+          "cachedResultName": "Customers",
+          "cachedResultUrl": "https://airtable.com/appteBjZma3qMiZUM/tblAGVFSRpiykzDPw"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('When Executed by Another Workflow').item.json.Name }}",
+            "Address": "={{ $('When Executed by Another Workflow').item.json.Address }}",
+            "Phone": "={{ $('When Executed by Another Workflow').item.json.Phone }}"
+          },
+          "matchingColumns": [
+            "Phone"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        512,
+        32
+      ],
+      "id": "05ba16e6-fc84-451c-8999-f8dd7dc6bb6d",
+      "name": "Create or update customer",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "ApOybum6NX9aEHl8",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "action": "generate",
+        "dataPropertyName": "order_id"
+      },
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -288
+      ],
+      "id": "7f660d35-6cb0-48c0-9d16-cf371a5f7beb",
+      "name": "Create Uuid"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n// for (const item of $input.all()) {\n//   item.json.myNewField = 1;\n// }\n// return $input.all();\n\nconst characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';\n  let result = '';\n  \n  for (let i = 0; i < 4; i++) {\n    const randomIndex = Math.floor(Math.random() * characters.length);\n    result += characters.charAt(randomIndex);\n  }\n  \nreturn [{\"order_number_for_customer\": result}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        -288
+      ],
+      "id": "a1e5b76c-2d1c-4011-a7c9-8a602b4e0b67",
+      "name": "Create order number for customer",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "d5aaPCxX5El-3L5nQQ9cS",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/d5aaPCxX5El-3L5nQQ9cS",
+          "cachedResultName": "Validate Zip Code"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "zipCode": "={{ $('When Executed by Another Workflow').item.json.ZipCode }}"
+          },
+          "matchingColumns": [
+            "zipCode"
+          ],
+          "schema": [
+            {
+              "id": "zipCode",
+              "displayName": "zipCode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        -432
+      ],
+      "id": "18ad3b85-f674-434e-8792-67ca6b64b2c5",
+      "name": "Call 'Validate Zip Code'"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c2611637-653a-4ad3-8586-ebf4548d7f1a",
+              "leftValue": "={{ $json.zipCodeIsValid }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        912,
+        -432
+      ],
+      "id": "a123569f-d222-4a1a-aa6e-3cd00a757d97",
+      "name": "If zipCode is valid"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "90e6d247-f7b7-431b-8dd0-c38e1bd72444",
+              "leftValue": "={{ $('When Executed by Another Workflow').item.json.DeliveryOrTakeAway }}",
+              "rightValue": "DELIVERY",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        544,
+        -288
+      ],
+      "id": "2a444c24-a1d4-4a1c-9484-f5d76f63047a",
+      "name": "If Delivery validate Zip Code"
+    },
+    {
+      "parameters": {
+        "errorMessage": "The provided zip code is not supported by the restaurant for delivery!"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        -544
+      ],
+      "id": "af66a821-04d5-4249-b9cd-8324b355b1a9",
+      "name": "Error ZipCode Invalid"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "Name": "Rob Ker",
+          "Address": "Seefelderhofberg 6, 86919 Utting",
+          "AddressObject": {
+            "Street": "Seefelderhofberg",
+            "City": "Utting",
+            "ZipCode": "86919",
+            "HouseNumber": "6"
+          },
+          "ZipCode": "86919",
+          "Phone": "+491717021730",
+          "DeliveryOrTakeAway": "DELIVERY",
+          "Menu": "[{\"amount\": 3, \"name\": \"M16 CHICKEN TIKKA MASALA\", \"specialWish\": \"mit Beilagensalat\"}, {\"amount\": 1, \"name\": \"M16 CHICKEN TIKKA MASALA\", \"specialWish\": \"mit Tages-Suppe\"}]",
+          "Time": "14:35",
+          "Status": "New"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Create or update customer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Uuid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Printer": {
+      "main": [
+        []
+      ]
+    },
+    "Persist Order": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist Customer": {
+      "main": [
+        []
+      ]
+    },
+    "Create or update customer": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Create Uuid": {
+      "main": [
+        [
+          {
+            "node": "Create order number for customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create order number for customer": {
+      "main": [
+        [
+          {
+            "node": "If Delivery validate Zip Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Validate Zip Code'": {
+      "main": [
+        [
+          {
+            "node": "If zipCode is valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If zipCode is valid": {
+      "main": [
+        [
+          {
+            "node": "Persist Order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error ZipCode Invalid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Delivery validate Zip Code": {
+      "main": [
+        [
+          {
+            "node": "Call 'Validate Zip Code'",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Persist Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "72e5692c-d063-4c76-9d06-3041a789c196",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5a599b89dbc04ef1f7e7b491e3fd120c9a2a9b52e0df303362994e819fe90753"
+  },
+  "id": "p3fFLvoKTLkUiMyu",
+  "tags": []
+}

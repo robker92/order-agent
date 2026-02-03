@@ -1,0 +1,127 @@
+{
+  "name": "Validate Zip Code",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "zipCode"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -224,
+        -48
+      ],
+      "id": "3fa35750-1add-4f18-b799-71be8d6a9d39",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allowedZips = [\n  \"86919\", \"86938\", \"86911\", \"82211\", \"82266\", \"82279\", \"86926\",\n  \"86899\", \"86916\", \"86929\", \"86949\", \"86923\", \"86922\", \"82269\",\n  \"82319\", \"82346\", \"82229\", \"82237\", \"82234\", \"82205\", \"82327\",\n  \"82256\", \"82284\", \"82299\", \"82110\", \"82223\", \"82362\", \"82399\",\n  \"82396\", \"82405\"\n];\n// Filter items where the input ZIP is in our list\n\nconst inputZipCode = $input.all()[0].json.zipCode\n\nconsole.log(inputZipCode)\nconsole.log(allowedZips.includes(inputZipCode))\nreturn [{\"zipCodeIsValid\": allowedZips.includes(inputZipCode)}]; \n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        -48
+      ],
+      "id": "d3bdacc4-4b87-4b9f-84a6-04c2296f0fce",
+      "name": "Check if zip code in allowed zip codes"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cd708f83-1cf9-41ed-8ee6-57a2ef591a0e",
+              "name": "zipCode",
+              "value": "={{ $json.zipcode }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -48,
+        -240
+      ],
+      "id": "64c4704d-8307-4fd3-baec-8ccaa92f3c7e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -192
+      ],
+      "id": "27a2c5bf-affa-4e83-99c3-f860a74ca119",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "zipCode": "86919"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Edit Fields": [
+      {
+        "json": {
+          "zipCode": null
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Check if zip code in allowed zip codes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "a74106f1-f54f-40a7-97e8-9ab2539f8e43",
+  "meta": {
+    "instanceId": "5a599b89dbc04ef1f7e7b491e3fd120c9a2a9b52e0df303362994e819fe90753"
+  },
+  "id": "d5aaPCxX5El-3L5nQQ9cS",
+  "tags": []
+}

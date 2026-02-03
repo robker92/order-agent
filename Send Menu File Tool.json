@@ -1,0 +1,159 @@
+{
+  "name": "Send Menu File Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "=whatsapp:+491717021730"
+            },
+            {
+              "name": "From",
+              "value": "=whatsapp:+14155238886"
+            },
+            {
+              "name": "MediaUrl",
+              "value": "https://mlqnjtpkfxfixouvvixb.supabase.co/storage/v1/object/sign/menu-files/Taj-Mahal-Utting-%20lunch%20menu.pdf?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82ZjFlMTRjNC1hOTFkLTRlM2EtYTY2YS04ODY3OTVjNDFmMTMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJtZW51LWZpbGVzL1Rhai1NYWhhbC1VdHRpbmctIGx1bmNoIG1lbnUucGRmIiwiaWF0IjoxNzY4NDIzNTM1LCJleHAiOjE3OTk5NTk1MzV9.eekg8exFJfZnnpT8a3O48gBaxZ9AnHbTWUyOe-vE7KM"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -32,
+        -48
+      ],
+      "id": "ea79d94f-dd2e-4861-8fdf-25d99ad2e7ff",
+      "name": "HTTP Request2",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "9olqPZYHnnl8AsuA",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -48
+      ],
+      "id": "51b26d7b-2a84-4940-8a28-8fb482d8d963",
+      "name": "When clicking ‘Execute workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "MediaUrl"
+            },
+            {
+              "name": "To"
+            },
+            {
+              "name": "From"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -272,
+        192
+      ],
+      "id": "5e76a15f-a1aa-4816-a5af-e78f6e1e572f",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{$env.TWILIO_ACCOUNT_SID}}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "To",
+              "value": "={{ $json.To }}"
+            },
+            {
+              "name": "From",
+              "value": "={{ $json.From }}"
+            },
+            {
+              "name": "MediaUrl",
+              "value": "={{ $json.MediaUrl }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -48,
+        192
+      ],
+      "id": "e623ab7d-01f3-4d5f-a9c8-d10ed7a2f964",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "9olqPZYHnnl8AsuA",
+          "name": "Unnamed credential"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8c686984-1173-4f79-b674-48e400361847",
+  "meta": {
+    "instanceId": "5a599b89dbc04ef1f7e7b491e3fd120c9a2a9b52e0df303362994e819fe90753"
+  },
+  "id": "pnkm7fTNoryzdapQ",
+  "tags": []
+}
